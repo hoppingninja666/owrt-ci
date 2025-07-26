@@ -1,5 +1,6 @@
 name: Cache-Clean
 
+on:
   workflow_dispatch:
 
 permissions: write-all
