@@ -1,0 +1,14 @@
+# Cursor Rules for this repository
+
+## Language and Communication
+- Always write all comments, commit messages, and documentation in English
+- Do not use Chinese characters in any code comments, commit messages, or documentation
+- Translate any Chinese text to English when making changes
+
+## Code Style
+- Use clear, descriptive English comments
+- Write commit messages in English following conventional commit format
+- Maintain consistency with existing English documentation
+
+## Repository Context
+This is an OpenWRT CI project for cloud-based firmware compilation. All technical documentation and code should be in English for better international collaboration. 
