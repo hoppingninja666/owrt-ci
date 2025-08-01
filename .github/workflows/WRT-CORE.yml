@@ -83,16 +83,29 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          sudo -E apt -yqq purge firefox
+          # Fix hostname resolution issue for local development
+          echo "127.0.0.1 $(hostname)" | sudo tee -a /etc/hosts || true
+          
+          sudo apt update
+          
+          # Try to purge firefox only if it exists, otherwise skip
+          if dpkg -l | grep -q firefox; then
+            sudo -E apt -yqq purge firefox || true
+          fi
+          
           sudo -E apt -yqq update
           sudo -E apt -yqq full-upgrade
           sudo -E apt -yqq autoremove --purge
           sudo -E apt -yqq autoclean
           sudo -E apt -yqq clean
-          sudo -E apt -yqq install dos2unix python3-netifaces libfuse-dev
-          sudo bash -c 'bash <(curl -sL https://build-scripts.immortalwrt.org/init_build_environment.sh)'
-          sudo -E systemctl daemon-reload
-          sudo -E timedatectl set-timezone "Asia/Shanghai"
+          sudo -E apt -yqq install dos2unix python3-netifaces libfuse-dev rsync
+          
+          # Skip systemctl and timedatectl in local environment (when ACT is set)
+          if [ -z "$ACT" ]; then
+            sudo bash -c 'bash <(curl -sL https://build-scripts.immortalwrt.org/init_build_environment.sh)'
+            sudo -E systemctl daemon-reload
+            sudo -E timedatectl set-timezone "Asia/Shanghai"
+          fi
 
           sudo mkdir -p /mnt/build_wrt
           sudo chown $USER:$USER /mnt/build_wrt
