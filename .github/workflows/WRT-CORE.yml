@@ -110,9 +110,10 @@ jobs:
       - name: Clone Code
         run: |
           if [ -n "$WRT_COMMIT" ]; then
-            # Clone with specific commit hash
-            git clone --depth=1 $WRT_REPO ./wrt/
+            # Clone with specific commit hash - fetch the commit directly
+            git clone --no-checkout $WRT_REPO ./wrt/
             cd ./wrt/
+            git fetch origin $WRT_COMMIT
             git checkout $WRT_COMMIT
           else
             # Clone with branch name
