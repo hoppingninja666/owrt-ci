@@ -31,6 +31,9 @@ on:
       WRT_BRANCH:
         required: true
         type: string
+      WRT_COMMIT:
+        required: false
+        type: string
       WRT_SOURCE:
         required: true
         type: string
@@ -52,6 +55,7 @@ env:
   WRT_PW: ${{inputs.WRT_PW}}
   WRT_REPO: ${{inputs.WRT_REPO}}
   WRT_BRANCH: ${{inputs.WRT_BRANCH}}
+  WRT_COMMIT: ${{inputs.WRT_COMMIT}}
   WRT_SOURCE: ${{inputs.WRT_SOURCE}}
   WRT_PACKAGE: ${{inputs.WRT_PACKAGE}}
   WRT_TEST: ${{inputs.WRT_TEST}}
@@ -105,9 +109,18 @@ jobs:
 
       - name: Clone Code
         run: |
-          git clone --depth=1 --single-branch --branch $WRT_BRANCH $WRT_REPO ./wrt/
+          if [ -n "$WRT_COMMIT" ]; then
+            # Clone with specific commit hash
+            git clone --depth=1 $WRT_REPO ./wrt/
+            cd ./wrt/
+            git checkout $WRT_COMMIT
+          else
+            # Clone with branch name
+            git clone --depth=1 --single-branch --branch $WRT_BRANCH $WRT_REPO ./wrt/
+            cd ./wrt/
+          fi
 
-          cd ./wrt/ && echo "WRT_HASH=$(git log -1 --pretty=format:'%h')" >> $GITHUB_ENV
+          echo "WRT_HASH=$(git log -1 --pretty=format:'%h')" >> $GITHUB_ENV
 
           # GitHub Action 移除国内下载源
           PROJECT_MIRRORS_FILE="./scripts/projectsmirrors.json"

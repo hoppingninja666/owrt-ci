@@ -34,7 +34,7 @@ jobs:
       matrix:
         CONFIG: [IPQ60XX-WIFI-YES]
         SOURCE: [VIKINGYFY/immortalwrt]
-        BRANCH: [725d59b93e4515022912b5b31e1220ef165aa576]
+        BRANCH: [master]
 
     #调用公用编译核心WRT-CORE.yml
     uses: ./.github/workflows/WRT-CORE.yml
@@ -57,6 +57,8 @@ jobs:
       WRT_REPO: https://github.com/${{matrix.SOURCE}}.git
       #源码分支
       WRT_BRANCH: ${{matrix.BRANCH}}
+      #源码提交哈希
+      WRT_COMMIT: 725d59b93e4515022912b5b31e1220ef165aa576
       #源码名称
       WRT_SOURCE: ${{matrix.SOURCE}}
       #插件调整
